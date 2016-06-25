@@ -1,4 +1,4 @@
-System.register(['angular2/core', './users.service', 'angular2/router'], function(exports_1, context_1) {
+System.register(['angular2/core', './users.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,8 +10,8 @@ System.register(['angular2/core', './users.service', 'angular2/router'], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, users_service_1, router_1;
-    var UsersComponent;
+    var core_1, users_service_1;
+    var UserFormComponent;
     return {
         setters:[
             function (core_1_1) {
@@ -19,32 +19,22 @@ System.register(['angular2/core', './users.service', 'angular2/router'], functio
             },
             function (users_service_1_1) {
                 users_service_1 = users_service_1_1;
-            },
-            function (router_1_1) {
-                router_1 = router_1_1;
             }],
         execute: function() {
-            UsersComponent = (function () {
-                function UsersComponent(_userService) {
-                    this._userService = _userService;
+            UserFormComponent = (function () {
+                function UserFormComponent() {
                 }
-                UsersComponent.prototype.ngOnInit = function () {
-                    var _this = this;
-                    this._userService.getUsers().subscribe(function (users) { return _this.users = users; });
-                };
-                UsersComponent = __decorate([
+                UserFormComponent = __decorate([
                     core_1.Component({
-                        selector: 'users',
-                        templateUrl: 'app/users.component.html',
-                        providers: [users_service_1.UserService],
-                        directives: [router_1.RouterLink]
+                        templateUrl: 'app/user-form.component.html',
+                        providers: [users_service_1.UserService]
                     }), 
-                    __metadata('design:paramtypes', [users_service_1.UserService])
-                ], UsersComponent);
-                return UsersComponent;
+                    __metadata('design:paramtypes', [])
+                ], UserFormComponent);
+                return UserFormComponent;
             }());
-            exports_1("UsersComponent", UsersComponent);
+            exports_1("UserFormComponent", UserFormComponent);
         }
     }
 });
-//# sourceMappingURL=users.component.js.map
+//# sourceMappingURL=user-form.component.js.map
