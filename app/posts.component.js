@@ -1,4 +1,4 @@
-System.register(['angular2/core'], function(exports_1, context_1) {
+System.register(['angular2/core', './posts.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,23 +10,33 @@ System.register(['angular2/core'], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, posts_service_1;
     var PostsComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (posts_service_1_1) {
+                posts_service_1 = posts_service_1_1;
             }],
         execute: function() {
             PostsComponent = (function () {
-                function PostsComponent() {
+                function PostsComponent(_postsServicee) {
+                    this._postsServicee = _postsServicee;
+                    this.title = 'Posts';
+                    this.isLoading = true;
                 }
+                PostsComponent.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this._postsServicee.getPosts().subscribe(function (posts) { return _this.posts = posts; }, null, function () { _this.isLoading = false; });
+                };
                 PostsComponent = __decorate([
                     core_1.Component({
-                        selector: 'posts',
-                        template: "<h1>Posts</h1>"
+                        templateUrl: "app/posts.component.html",
+                        providers: [posts_service_1.PostsService]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [posts_service_1.PostsService])
                 ], PostsComponent);
                 return PostsComponent;
             }());
