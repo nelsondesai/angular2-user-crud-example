@@ -12,9 +12,12 @@ export class PostsService
     {
 
     }
-    getPosts()
+    getPosts(filter?)
     {
-        return this._http.get(this._url).map(users => users.json());
+        var url = this._url;
+         if (filter && filter.userId)
+            url += "?userId=" + filter.userId;
+        return this._http.get(url).map(users => users.json());
     }
     getPost(postsId)
     {

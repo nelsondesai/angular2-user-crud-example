@@ -1,5 +1,6 @@
 import {Component, OnInit } from 'angular2/core';
 import {PostsService} from './posts.service';
+import {UserService} from './users.service';
 import {SpinnerComponent} from './spinner.component';
 @Component({
     templateUrl: `app/posts.component.html`,
@@ -17,30 +18,46 @@ import {SpinnerComponent} from './spinner.component';
             border-radius: 100%;
         } 
      `],
-    providers:[PostsService],
+    providers:[PostsService, UserService],
     directives:[SpinnerComponent]
 })
 export class PostsComponent implements OnInit{    
     posts: any[];
+    users: any[];
     title= 'Posts';
-    isLoading = true;
+    postsLoading = true;
     commentsLoading;
     currentPost;
-    constructor(private _postsServicee : PostsService)
+    constructor(private _postsServicee : PostsService, private _userService : UserService )
     {
           
     }
     ngOnInit(){
-        this._postsServicee.getPosts().subscribe(
-            posts => this.posts = posts,
-            null,
-            ()=> { this.isLoading=false; });      
+        this.loadUsers();  
+        this.loadPosts();   
     }
     select(post){
  		this.currentPost = post; 
         this.commentsLoading = true;
         this._postsServicee.getComments(post.id)
  			.subscribe(comments => this.currentPost.comments = comments, null, () => this.commentsLoading = false); 
+     }
+     private loadUsers()
+     {
+            this._userService.getUsers().subscribe(users => this.users = users);
+     }
+     private loadPosts(filter?)
+     {
+            this.postsLoading = true; 
+            this._postsServicee.getPosts(filter).subscribe(
+                posts => this.posts = posts,
+                null,
+                ()=> { this.postsLoading=false; });  
+     }
+     reloadPosts(filter)
+     {
+         this.currentPost = null;
+         this.loadPosts(filter);  
      }
       
 }
