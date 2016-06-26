@@ -27,6 +27,7 @@ System.register(['angular2/core', './users.service', 'angular2/router'], functio
             UsersComponent = (function () {
                 function UsersComponent(_userService) {
                     this._userService = _userService;
+                    this.formTitle = 'Add a User';
                 }
                 UsersComponent.prototype.ngOnInit = function () {
                     var _this = this;
