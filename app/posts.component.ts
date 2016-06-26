@@ -24,6 +24,7 @@ export class PostsComponent implements OnInit{
     posts: any[];
     title= 'Posts';
     isLoading = true;
+    commentsLoading;
     currentPost;
     constructor(private _postsServicee : PostsService)
     {
@@ -37,8 +38,9 @@ export class PostsComponent implements OnInit{
     }
     select(post){
  		this.currentPost = post; 
+        this.commentsLoading = true;
         this._postsServicee.getComments(post.id)
- 			.subscribe(comments => this.currentPost.comments = comments); 
+ 			.subscribe(comments => this.currentPost.comments = comments, null, () => this.commentsLoading = false); 
      }
       
 }
