@@ -28,4 +28,8 @@ export class UserService
     {
         return this._http.put(this._url + "/" + user.id,JSON.stringify(user)).map(res => res.json());
     }
+    deleteUser(userId)
+    {
+        return this._http.delete(this._url + "/" + userId).map(res => res.json());
+    }
 }

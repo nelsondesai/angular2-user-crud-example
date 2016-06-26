@@ -19,7 +19,7 @@
                 <a [routerLink]="['EditUser',{id:user.id}]"> <i class="fa fa-pencil-square-o"></i></a>
  			</td>
  			<td>
-                 <i class="fa fa-times"></i>
+                 <i class="fa fa-times" (click)="deleteUser(user)"></i>
              </td>
  		</tr>
  	</tbody>

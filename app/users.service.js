@@ -39,6 +39,9 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/add/operator/map'], fun
                 UserService.prototype.updateUser = function (user) {
                     return this._http.put(this._url + "/" + user.id, JSON.stringify(user)).map(function (res) { return res.json(); });
                 };
+                UserService.prototype.deleteUser = function (userId) {
+                    return this._http.delete(this._url + "/" + userId).map(function (res) { return res.json(); });
+                };
                 UserService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [http_1.Http])
