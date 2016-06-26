@@ -1,4 +1,4 @@
-System.register(['angular2/core', './posts.service', './users.service', './spinner.component'], function(exports_1, context_1) {
+System.register(['angular2/core', './posts.service', './users.service', './spinner.component', './pagination.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', './posts.service', './users.service', './spinn
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, posts_service_1, users_service_1, spinner_component_1;
+    var core_1, posts_service_1, users_service_1, spinner_component_1, pagination_component_1;
     var PostsComponent;
     return {
         setters:[
@@ -25,45 +25,68 @@ System.register(['angular2/core', './posts.service', './users.service', './spinn
             },
             function (spinner_component_1_1) {
                 spinner_component_1 = spinner_component_1_1;
+            },
+            function (pagination_component_1_1) {
+                pagination_component_1 = pagination_component_1_1;
             }],
         execute: function() {
             PostsComponent = (function () {
-                function PostsComponent(_postsServicee, _userService) {
-                    this._postsServicee = _postsServicee;
+                function PostsComponent(_postsService, _userService) {
+                    this._postsService = _postsService;
                     this._userService = _userService;
-                    this.title = 'Posts';
-                    this.postsLoading = true;
+                    this.posts = [];
+                    this.pagedPosts = [];
+                    this.users = [];
+                    this.pageSize = 10;
                 }
                 PostsComponent.prototype.ngOnInit = function () {
                     this.loadUsers();
                     this.loadPosts();
                 };
-                PostsComponent.prototype.select = function (post) {
-                    var _this = this;
-                    this.currentPost = post;
-                    this.commentsLoading = true;
-                    this._postsServicee.getComments(post.id)
-                        .subscribe(function (comments) { return _this.currentPost.comments = comments; }, null, function () { return _this.commentsLoading = false; });
-                };
                 PostsComponent.prototype.loadUsers = function () {
                     var _this = this;
-                    this._userService.getUsers().subscribe(function (users) { return _this.users = users; });
+                    this._userService.getUsers()
+                        .subscribe(function (users) { return _this.users = users; });
                 };
                 PostsComponent.prototype.loadPosts = function (filter) {
                     var _this = this;
                     this.postsLoading = true;
-                    this._postsServicee.getPosts(filter).subscribe(function (posts) { return _this.posts = posts; }, null, function () { _this.postsLoading = false; });
+                    this._postsService.getPosts(filter)
+                        .subscribe(function (posts) {
+                        _this.posts = posts;
+                        _this.pagedPosts = _this.getPostsInPage(1);
+                    }, null, function () { _this.postsLoading = false; });
                 };
                 PostsComponent.prototype.reloadPosts = function (filter) {
                     this.currentPost = null;
                     this.loadPosts(filter);
                 };
+                PostsComponent.prototype.select = function (post) {
+                    var _this = this;
+                    this.currentPost = post;
+                    this.commentsLoading = true;
+                    this._postsService.getComments(post.id)
+                        .subscribe(function (comments) {
+                        return _this.currentPost.comments = comments;
+                    }, null, function () { return _this.commentsLoading = false; });
+                };
+                PostsComponent.prototype.onPageChanged = function (page) {
+                    this.pagedPosts = this.getPostsInPage(page);
+                };
+                PostsComponent.prototype.getPostsInPage = function (page) {
+                    var result = [];
+                    var startingIndex = (page - 1) * this.pageSize;
+                    var endIndex = Math.min(startingIndex + this.pageSize, this.posts.length);
+                    for (var i = startingIndex; i < endIndex; i++)
+                        result.push(this.posts[i]);
+                    return result;
+                };
                 PostsComponent = __decorate([
                     core_1.Component({
-                        templateUrl: "app/posts.component.html",
-                        styles: ["\n         .posts li { cursor: default; }\n         .posts li:hover { background: #ecf0f1; } \n         .list-group-item.active, \n         .list-group-item.active:hover, \n         .list-group-item.active:focus { \n             background-color: #ecf0f1;\n             border-color: #ecf0f1; \n             color: #2c3e50;\n         }\n         .thumbnail {\n            border-radius: 100%;\n        } \n     "],
+                        templateUrl: 'app/posts.component.html',
+                        styles: ["\n         .posts li { cursor: default; }\n         .posts li:hover { background: #ecf0f1; } \n         .list-group-item.active, \n         .list-group-item.active:hover, \n         .list-group-item.active:focus { \n             background-color: #ecf0f1;\n             border-color: #ecf0f1; \n             color: #2c3e50;\n          }\n      "],
                         providers: [posts_service_1.PostsService, users_service_1.UserService],
-                        directives: [spinner_component_1.SpinnerComponent]
+                        directives: [spinner_component_1.SpinnerComponent, pagination_component_1.PaginationComponent]
                     }), 
                     __metadata('design:paramtypes', [posts_service_1.PostsService, users_service_1.UserService])
                 ], PostsComponent);

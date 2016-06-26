@@ -1,9 +1,12 @@
-import {Component, OnInit } from 'angular2/core';
+import {Component, OnInit} from 'angular2/core';
+
 import {PostsService} from './posts.service';
 import {UserService} from './users.service';
 import {SpinnerComponent} from './spinner.component';
+import {PaginationComponent} from './pagination.component'; 
+  
 @Component({
-    templateUrl: `app/posts.component.html`,
+      templateUrl: 'app/posts.component.html',
      styles: [`
          .posts li { cursor: default; }
          .posts li:hover { background: #ecf0f1; } 
@@ -13,51 +16,77 @@ import {SpinnerComponent} from './spinner.component';
              background-color: #ecf0f1;
              border-color: #ecf0f1; 
              color: #2c3e50;
-         }
-         .thumbnail {
-            border-radius: 100%;
-        } 
-     `],
-    providers:[PostsService, UserService],
-    directives:[SpinnerComponent]
-})
-export class PostsComponent implements OnInit{    
-    posts: any[];
-    users: any[];
-    title= 'Posts';
-    postsLoading = true;
-    commentsLoading;
-    currentPost;
-    constructor(private _postsServicee : PostsService, private _userService : UserService )
-    {
-          
-    }
-    ngOnInit(){
-        this.loadUsers();  
-        this.loadPosts();   
-    }
-    select(post){
- 		this.currentPost = post; 
-        this.commentsLoading = true;
-        this._postsServicee.getComments(post.id)
- 			.subscribe(comments => this.currentPost.comments = comments, null, () => this.commentsLoading = false); 
-     }
-     private loadUsers()
-     {
-            this._userService.getUsers().subscribe(users => this.users = users);
-     }
-     private loadPosts(filter?)
-     {
-            this.postsLoading = true; 
-            this._postsServicee.getPosts(filter).subscribe(
-                posts => this.posts = posts,
-                null,
-                ()=> { this.postsLoading=false; });  
-     }
-     reloadPosts(filter)
-     {
-         this.currentPost = null;
-         this.loadPosts(filter);  
-     }
+          }
+      `],
+      providers: [PostsService, UserService],     
+     directives: [SpinnerComponent, PaginationComponent]
+  })
+  export class PostsComponent implements OnInit {
+  	posts = [];
+     pagedPosts = [];
+      users = [];
+      postsLoading;
+      commentsLoading;
+      currentPost;
+     pageSize = 10;
       
-}
+      constructor(
+         private _postsService: PostsService,
+         private _userService: UserService) {
+ 	}
+ 
+ 	ngOnInit() {
+         this.loadUsers();
+         this.loadPosts();        
+ 	}
+     
+     private loadUsers(){
+         this._userService.getUsers()
+             .subscribe(users => this.users = users);
+     }
+     
+     private loadPosts(filter?){
+        this.postsLoading = true; 
+  		this._postsService.getPosts(filter)
+  			.subscribe(                 
+                 posts => {
+                     this.posts = posts;
+                     this.pagedPosts = this.getPostsInPage(1);
+                 },
+                  null,
+                  () => { this.postsLoading = false; });
+      }
+     
+     reloadPosts(filter){
+         this.currentPost = null;
+         
+         this.loadPosts(filter);
+     }
+     
+     select(post){
+ 		this.currentPost = post; 
+         
+         this.commentsLoading = true;
+         this._postsService.getComments(post.id)
+ 			.subscribe(
+                 comments => 
+                     this.currentPost.comments = comments,
+                  null,
+                  () => this.commentsLoading = false); 
+      } 
+     
+ 	onPageChanged(page) {
+         this.pagedPosts = this.getPostsInPage(page);
+ 	}
+     
+     private getPostsInPage(page){
+         var result = [];
+ 		var startingIndex = (page - 1) * this.pageSize;
+         var endIndex = Math.min(startingIndex + this.pageSize, this.posts.length);
+ 
+         for (var i = startingIndex; i < endIndex; i++)
+             result.push(this.posts[i]);
+             
+         return result;
+     }
+  } 
