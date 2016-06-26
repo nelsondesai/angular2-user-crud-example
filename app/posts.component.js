@@ -35,12 +35,15 @@ System.register(['angular2/core', './posts.service', './spinner.component'], fun
                     this._postsServicee.getPosts().subscribe(function (posts) { return _this.posts = posts; }, null, function () { _this.isLoading = false; });
                 };
                 PostsComponent.prototype.select = function (post) {
+                    var _this = this;
                     this.currentPost = post;
+                    this._postsServicee.getComments(post.id)
+                        .subscribe(function (comments) { return _this.currentPost.comments = comments; });
                 };
                 PostsComponent = __decorate([
                     core_1.Component({
                         templateUrl: "app/posts.component.html",
-                        styles: ["\n         .posts li { cursor: default; }\n         .posts li:hover { background: #ecf0f1; } \n         .list-group-item.active, \n         .list-group-item.active:hover, \n         .list-group-item.active:focus { \n             background-color: #ecf0f1;\n             border-color: #ecf0f1; \n             color: #2c3e50;\n         }\n     "],
+                        styles: ["\n         .posts li { cursor: default; }\n         .posts li:hover { background: #ecf0f1; } \n         .list-group-item.active, \n         .list-group-item.active:hover, \n         .list-group-item.active:focus { \n             background-color: #ecf0f1;\n             border-color: #ecf0f1; \n             color: #2c3e50;\n         }\n         .thumbnail {\n            border-radius: 100%;\n        } \n     "],
                         providers: [posts_service_1.PostsService],
                         directives: [spinner_component_1.SpinnerComponent]
                     }), 

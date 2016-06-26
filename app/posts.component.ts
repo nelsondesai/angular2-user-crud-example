@@ -13,6 +13,9 @@ import {SpinnerComponent} from './spinner.component';
              border-color: #ecf0f1; 
              color: #2c3e50;
          }
+         .thumbnail {
+            border-radius: 100%;
+        } 
      `],
     providers:[PostsService],
     directives:[SpinnerComponent]
@@ -34,5 +37,8 @@ export class PostsComponent implements OnInit{
     }
     select(post){
  		this.currentPost = post; 
-     }    
+        this._postsServicee.getComments(post.id)
+ 			.subscribe(comments => this.currentPost.comments = comments); 
+     }
+      
 }

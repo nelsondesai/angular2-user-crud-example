@@ -30,17 +30,11 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/add/operator/map'], fun
                 PostsService.prototype.getPosts = function () {
                     return this._http.get(this._url).map(function (users) { return users.json(); });
                 };
-                PostsService.prototype.addPosts = function (users) {
-                    return this._http.post(this._url, JSON.stringify(users)).map(function (users) { return users.json(); });
-                };
                 PostsService.prototype.getPost = function (postsId) {
                     return this._http.get(this._url + "/" + postsId).map(function (res) { return res.json(); });
                 };
-                PostsService.prototype.updatePosts = function (user) {
-                    return this._http.put(this._url + "/" + user.id, JSON.stringify(user)).map(function (res) { return res.json(); });
-                };
-                PostsService.prototype.deletePosts = function (postsId) {
-                    return this._http.delete(this._url + "/" + postsId).map(function (res) { return res.json(); });
+                PostsService.prototype.getComments = function (postId) {
+                    return this._http.get(this._url + "/" + postId + "/comments").map(function (res) { return res.json(); });
                 };
                 PostsService = __decorate([
                     core_1.Injectable(), 
